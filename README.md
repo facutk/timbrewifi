@@ -1,5 +1,9 @@
 # timbrewifi
 
+https://docs.google.com/document/d/1VAGbpbPSKK6W7qm5cIGIxE_L4cYcMTsOJ_MftIHxY6Q/edit#
+
+https://docs.google.com/spreadsheets/d/1WAJFt9ZyZiy9j5QowcxOFD5H1xpNmHd2iSWrZR9Q3vc/edit#gid=0
+
 A barebones PHP app that makes use of the [Silex](http://silex.sensiolabs.org/) web framework, which can easily be deployed to Heroku.
 
 This application supports the [Getting Started with PHP on Heroku](https://devcenter.heroku.com/articles/getting-started-with-php) article - check it out.
