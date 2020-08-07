@@ -11,7 +11,7 @@
       $credentials_file = 'credentials.json';
       if (!file_exists($credentials_file)) {
         $credentials = $_ENV["googleapis_sheets_credentials"];
-        if(empty(credentials)) {
+        if(empty($credentials)) {
           throw new InvalidArgumentException('credentials not found!');
         }
         file_put_contents($credentials_file, $credentials);
