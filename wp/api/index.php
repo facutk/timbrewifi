@@ -63,7 +63,7 @@
 
     foreach ($telegramUsers as $userId) {
       $uri = "https://api.telegram.org/bot".$_ENV["TIMBREWIFI_TELEGRAM_TOKEN"];
-      return file_get_contents($uri."/sendmessage?parse_mode=Markdown&chat_id=".$userId."&text=Timbre en *".$device."*");
+      file_get_contents($uri."/sendmessage?parse_mode=Markdown&chat_id=".$userId."&text=Timbre en *".$device."*");
     }
 
     echo 'ok';
