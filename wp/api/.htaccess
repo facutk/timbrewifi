@@ -1,3 +1,8 @@
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [QSA,L]
+
+<Files credentials.json>
+Order allow,deny
+Deny from all
+</Files>
