@@ -45,44 +45,28 @@
     echo json_encode($values);
   });
 
-  Route::add('/register', function() {
-    $newvalues = [
-      [
-          "foo2", "bar2"
-      ],
-    ];
-    $body = new Google_Service_Sheets_ValueRange([
-      'values' => $newvalues
-    ]);
-    $params = [
-      'valueInputOption' => 'USER_ENTERED'
-    ];
-    $result = $service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
-    printf("%d cells appended.", $result->getUpdates()->getUpdatedCells());
-  });
+  Route::add('/notify/(.*)', function($device) {
+    $spreadsheetId = $_ENV["TIMBREWIFI_SPREADSHEET_ID"];
+    $range = 'device_users!A1:B';
+    $client = getClient();
+    $service = new Google_Service_Sheets($client);
+    $response = $service->spreadsheets_values->get($spreadsheetId, $range);
 
-  Route::add('/delete', function() {
-    $requests = [
-      // delete 1st row
-      new Google_Service_Sheets_Request([
-          'deleteDimension' => [
-              'range' => [
-                'sheetId' => 0,
-                'dimension' => 'ROWS',
-                'startIndex' => 7,
-                'endIndex' => 8
-              ]
-          ]
-      ])
-    ];
-    
-    // Add additional requests (operations) ...
-    $batchUpdateRequest = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest([
-        'requests' => $requests
-    ]);
-    
-    $response = $service->spreadsheets->batchUpdate($spreadsheetId, $batchUpdateRequest);
-    // printf("%d cells updated.", $result->getTotalUpdatedCells());
+    $values = $response->getValues();
+
+    $filtered = array_filter($values, function($row) use ($device) {
+      return $row[0] == $device;
+    });
+    $telegramUsers = array_map(function($row) {
+      return $row[1];
+    }, $filtered);
+
+    foreach ($telegramUsers as $userId) {
+      $uri = "https://api.telegram.org/bot".$_ENV["TIMBREWIFI_TELEGRAM_TOKEN"];
+      return file_get_contents($uri."/sendmessage?parse_mode=Markdown&chat_id=".$userId."&text=Timbre en *".$device."*");
+    }
+
+    echo 'ok';
   });
 
   Route::run('/api');
